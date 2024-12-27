@@ -25,3 +25,8 @@ export interface AuctionCall {
   amount: bigint;
   userAddress: string;
 }
+export interface MintCurr {
+  shortForm: string;
+  amount: bigint;
+  user: string;
+}

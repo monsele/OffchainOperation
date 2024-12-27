@@ -1,6 +1,12 @@
 import { account, bundlerClient } from "../config";
 import { contractABI, contractAddress } from "../config/abi";
-import { BuyListing, CreateListing,Bid, AuctionCall } from "../utils/interface";
+import {
+  BuyListing,
+  CreateListing,
+  Bid,
+  AuctionCall,
+  MintCurr,
+} from "../utils/interface";
 
 export const CreateAsset = async (asset: CreateListing) => {
   try {
@@ -13,7 +19,7 @@ export const CreateAsset = async (asset: CreateListing) => {
         asset.totalUnits,
         asset.totalUnits,
         asset.category,
-        asset.userAddress
+        asset.userAddress,
       ],
     };
     const calls = [data];
@@ -77,25 +83,20 @@ export const BuyPlot = async (buyplot: BuyListing) => {
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOpHash,
     });
-    return { success: true, result: receipt.user}
+    return { success: true, result: receipt.user };
   } catch (error) {
     console.error(error);
     return { success: false, result: error };
   }
 };
 
-export const PayBid = async (bid:Bid) => {
+export const PayBid = async (bid: Bid) => {
   try {
     const data = {
       abi: contractABI,
       functionName: "PayBid",
       to: contractAddress,
-      args: [
-        bid.auctionId,
-        bid.amount,
-        bid.currencyCode,
-        bid.userAddress,
-      ],
+      args: [bid.auctionId, bid.amount, bid.currencyCode, bid.userAddress],
     };
     const calls = [data];
     account.userOperation = {
@@ -122,19 +123,14 @@ export const PayBid = async (bid:Bid) => {
     console.error(error);
     return { success: false, result: error };
   }
-
-}
- export const AuctionAsset = async (auction: AuctionCall) => {
+};
+export const AuctionAsset = async (auction: AuctionCall) => {
   try {
     const data = {
       abi: contractABI,
       functionName: "AuctionAsset",
       to: contractAddress,
-      args: [
-        auction.tokenId,
-        auction.amount,
-        auction.userAddress,
-      ],
+      args: [auction.tokenId, auction.amount, auction.userAddress],
     };
     const calls = [data];
     account.userOperation = {
@@ -161,4 +157,39 @@ export const PayBid = async (bid:Bid) => {
     console.error(error);
     return { success: false, result: error };
   }
- }
+};
+
+export const MintCurrency = async (mint: MintCurr) => {
+  try {
+    const data = {
+      abi: contractABI,
+      functionName: "MintCurrency",
+      to: contractAddress,
+      args: [mint.shortForm, mint.amount, mint.user],
+    };
+    const calls = [data];
+    account.userOperation = {
+      estimateGas: async (userOperation) => {
+        const estimate = await bundlerClient.estimateUserOperationGas(
+          userOperation
+        );
+        // adjust preVerification upward
+        estimate.preVerificationGas = estimate.preVerificationGas * 2n;
+        return estimate;
+      },
+    };
+    const userOpHash = await bundlerClient.sendUserOperation({
+      account,
+      calls,
+      paymaster: true,
+    });
+
+    const receipt = await bundlerClient.waitForUserOperationReceipt({
+      hash: userOpHash,
+    });
+    return { success: true, result: receipt.userOpHash };
+  } catch (error) {
+    console.error(error);
+    return { success: false, result: error };
+  }
+};
