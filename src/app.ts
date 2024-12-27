@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import routes from './routes/index';
 dotenv.config();
 
 const app = express();
@@ -9,9 +10,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Routes
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, TypeScript with Express!");
-});
+app.use("/api", routes);
+
 
 // Start server
 app.listen(PORT, () => {
