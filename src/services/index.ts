@@ -1,4 +1,5 @@
-import { account, bundlerClient } from "../config";
+import { PublicClient } from "viem";
+import { account, bundlerClient, client } from "../config";
 import { contractABI, contractAddress } from "../config/abi";
 import {
   BuyListing,
@@ -6,7 +7,9 @@ import {
   Bid,
   AuctionCall,
   MintCurr,
+  SmartContractNumberUpdate,
 } from "../utils/interface";
+import { offchainApi } from "../config/apiConfig";
 
 export const CreateAsset = async (asset: CreateListing) => {
   try {
@@ -19,10 +22,12 @@ export const CreateAsset = async (asset: CreateListing) => {
         asset.totalUnits,
         asset.totalUnits,
         asset.category,
+        asset.metaId,
         asset.userAddress,
       ],
     };
     const calls = [data];
+
     account.userOperation = {
       estimateGas: async (userOperation) => {
         const estimate = await bundlerClient.estimateUserOperationGas(
@@ -42,6 +47,27 @@ export const CreateAsset = async (asset: CreateListing) => {
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOpHash,
     });
+
+    var userClient = client as PublicClient;
+    var metadata = await userClient.readContract({
+      address: contractAddress,
+      abi: contractABI,
+      functionName: "getMetaMapping",
+      args: [asset.metaId],
+    });
+    var formattedData = {
+      MetaId: metadata.MetaId as unknown as number,
+      Id: metadata.Id.toString(),
+    };
+    console.log(formattedData);
+
+    const requestData: SmartContractNumberUpdate = {
+      metaId: metadata.MetaId as unknown as number,
+      id: Number(formattedData.Id)
+    };
+
+    var resp = await offchainApi.post("/contractNumber", requestData);
+
     return { success: true, result: receipt.userOpHash };
   } catch (error) {
     console.error(error);

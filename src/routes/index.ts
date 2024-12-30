@@ -16,6 +16,7 @@ router.post("/create-asset", async (_req: Request, res: Response) => {
       totalUnits,
       totalUnitsNumber,
       category,
+      metaId,
       userAddress,
     } = _req.body;
     var soln = await CreateAsset({
@@ -23,6 +24,7 @@ router.post("/create-asset", async (_req: Request, res: Response) => {
       totalUnits,
       totalUnitsNumber,
       category,
+      metaId,
       userAddress,
     });
     if (soln.success) {
