@@ -1,12 +1,11 @@
 import {
   createPublicClient,
-  createWalletClient,
   http,
   Client
 } from "viem";
 import { privateKeyToAccount, Account } from "viem/accounts";
 import { createBundlerClient, toCoinbaseSmartAccount } from "viem/account-abstraction";
-import { baseSepolia, Chain } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import dotenv from "dotenv";
 
 dotenv.config();

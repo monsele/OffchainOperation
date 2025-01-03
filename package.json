@@ -2,11 +2,12 @@
   "name": "paymaster",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "nodemon src/sapp.ts",
-    "sap": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts",
+    "sap": "nodemon src/sap.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

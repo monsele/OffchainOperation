@@ -3,8 +3,8 @@
     "target": "ES2020",
     "module": "NodeNext",
     "lib": ["ES2020", "esnext.asynciterable"],
-    "outDir": "dist",
-    "rootDir": ".",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": false,
     "strictPropertyInitialization": false,
     "esModuleInterop": true,
@@ -17,14 +17,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "maxNodeModuleJsDepth": 5, // Add this to help handle node_modules
   },
-   "maxNodeModuleJsDepth": 5, // Add this to help handle node_modules
-   "typeInstantiationDepth": 100, // Increase type depth to avoid this error
-  "include": [
-    "src/*/*.ts",
-    "src/*/*.js"
-, "src/config/index.tjs"  ],
+ "typeInstantiationDepth": 100, // Increase type depth to avoid this error
+ "include": [
+  "src/**/*",
+  "app.ts"
+],
   "exclude": [
     "node_modules",
     "dist"
