@@ -185,6 +185,8 @@ export const AuctionAsset = async (auction: AuctionCall) => {
       functionName: "getAuctionCounter",
       args: [],
     });
+    console.log(auctionCounter);
+    
 
     return {
       success: true,

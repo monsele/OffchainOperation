@@ -63,7 +63,7 @@ router.post("/auction", async (_req: Request, res: Response) => {
     const { tokenId, amount, userAddress } = _req.body;
     var soln = await AuctionAsset({ tokenId, amount, userAddress });
     if (soln.success) {
-      res.status(200).json({ success: true, result: soln.result });
+      res.status(200).json(soln);
     } else {
       res.status(400).json({ success: false, result: soln.result });
     }
