@@ -63,7 +63,7 @@ export const CreateAsset = async (asset: CreateListing) => {
 
     const requestData: SmartContractNumberUpdate = {
       metaId: metadata.MetaId as unknown as number,
-      id: Number(formattedData.Id)
+      id: Number(formattedData.Id),
     };
 
     var resp = await offchainApi.post("/contractNumber", requestData);
@@ -178,7 +178,19 @@ export const AuctionAsset = async (auction: AuctionCall) => {
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOpHash,
     });
-    return { success: true, result: receipt.userOpHash };
+    var userClient = client as PublicClient;
+    var auctionCounter = await userClient.readContract({
+      address: contractAddress,
+      abi: contractABI,
+      functionName: "getAuctionCounter",
+      args: [],
+    });
+
+    return {
+      success: true,
+      result: receipt.userOpHash,
+      auctionCounter: Number(auctionCounter),
+    };
   } catch (error) {
     console.error(error);
     return { success: false, result: error };
