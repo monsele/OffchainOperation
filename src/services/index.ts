@@ -203,7 +203,7 @@ export const MintCurrency = async (mint: MintCurr) => {
   try {
     const data = {
       abi: contractABI,
-      functionName: "MintCurrency",
+      functionName: "mintCurrency",
       to: contractAddress,
       args: [mint.shortForm, mint.amount, mint.user],
     };
