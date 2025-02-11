@@ -108,8 +108,10 @@ export const BuyPlot = async (buyplot: BuyListing) => {
 
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOpHash,
+      
     });
-    return { success: true, result: receipt.user };
+
+    return { success: true, result: receipt.receipt.transactionHash };
   } catch (error) {
     console.error(error);
     return { success: false, result: error };
