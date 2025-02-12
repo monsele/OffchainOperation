@@ -68,7 +68,7 @@ export const CreateAsset = async (asset: CreateListing) => {
 
     var resp = await offchainApi.post("/contractNumber", requestData);
 
-    return { success: true, result: receipt.userOpHash };
+    return { success: true, result: receipt.receipt.transactionHash };
   } catch (error) {
     console.error(error);
     return { success: false, result: error };
@@ -146,7 +146,7 @@ export const PayBid = async (bid: Bid) => {
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOpHash,
     });
-    return { success: true, result: receipt.userOpHash };
+    return { success: true, result: receipt.receipt.transactionHash };
   } catch (error) {
     console.error(error);
     return { success: false, result: error };
@@ -192,7 +192,7 @@ export const AuctionAsset = async (auction: AuctionCall) => {
 
     return {
       success: true,
-      result: receipt.userOpHash,
+      result: receipt.receipt.transactionHash,
       auctionCounter: Number(auctionCounter),
     };
   } catch (error) {
@@ -229,7 +229,7 @@ export const MintCurrency = async (mint: MintCurr) => {
     const receipt = await bundlerClient.waitForUserOperationReceipt({
       hash: userOpHash,
     });
-    return { success: true, result: receipt.userOpHash };
+    return { success: true, result: receipt.receipt.transactionHash };
   } catch (error) {
     console.error(error);
     return { success: false, result: error };
