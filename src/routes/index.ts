@@ -1,13 +1,26 @@
+import { log } from "console";
 import {
   AuctionAsset,
   BuyPlot,
   CreateAsset,
   MintCurrency,
   PayBid,
-} from "../services";
+} from "../services/index.js";
 import { Request, Response, Router } from "express";
 
 const router = Router();
+
+
+
+router.get("/hello", async (_req: Request, res: Response) => {
+  try {
+    log("Hello endpoint hit");
+    res.status(200).json({ message: "Hello, World!" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 router.post("/create-asset", async (_req: Request, res: Response) => {
   try {
@@ -98,5 +111,6 @@ router.post("/mint", async (_req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 export default router;
