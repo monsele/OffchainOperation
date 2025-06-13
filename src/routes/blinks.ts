@@ -52,10 +52,14 @@ blinkRouter.get("/hello", async (_req: Request, res: Response) => {
 blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
 
   try {
-     console.log(req);
+    console.log(req);
+    console.log("----- New Request Received -----");
+    console.log("Request URL:", req.url);
+    console.log("Request Query:", req.query);
+    console.log("Request Body:", req.body);
       const { campaign, influencer, nft } = req.query;
       // const body: ActionPostRequest = await req.();
-       console.log("Request body:", req.body);
+       
       
       const { account } = req.body;
           if (!campaign || !influencer || !nft) {
@@ -69,7 +73,7 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
           error: "Missing account in request body"
         });
       }
-      const connection = new Connection(process.env.SOLANA_RPC_URL);
+      const connection = new Connection("https://devnet.helius-rpc.com/?api-key=8eb94de2-b378-4923-a86f-10d7590b4fdd");
 
       const buyer = new PublicKey(account);
        const influencerKey = new PublicKey(influencer);
@@ -84,45 +88,7 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
        const provider = new AnchorProvider(connection, dummyWallet, {});
        const program = new Program(idl as AffiliateDapp, provider);
        const programId = program.programId
-      //   const [campaignPDA] = await PublicKey.findProgramAddressSync(
-      //   [Buffer.from("nft_campaign"), Buffer.from(campaign as string), nftMint.toBuffer()],
-      //   program.programId
-      // );
-  
-      // const [affiliateLinkPDA] = await PublicKey.findProgramAddressSync(
-      //   [Buffer.from("affiliate_link"), influencerKey.toBuffer(), Buffer.from(campaign as string)],
-      //   program.programId
-      // );
-  
-      // const [nftEscrowPDA] = await PublicKey.findProgramAddressSync(
-      //   [Buffer.from("nft_escrow"), Buffer.from(campaign as string), nftMint.toBuffer()],
-      //   program.programId
-      // );
-  
-      // const buyerTokenAccount = await getAssociatedTokenAddress(nftMint, buyer);
-      //  //const buyerTokenAccount = await getAssociatedTokenAddress(mintPubkey, buyer);
-      // const ownerTokenAccount = await getAssociatedTokenAddress(nftMint, campaignPDA,true);
-      // const escrowPdaNftTokenAccount = await getAssociatedTokenAddress(nftMint, nftEscrowPDA, true);
-  
-      // const ix = await program.methods
-      //   .processAffiliateMint(campaign, influencerKey, nftMint)
-      //   .accounts({
-      //     campaign: campaignPDA,
-      //     affiliateLink: affiliateLinkPDA,
-      //     buyer: buyer,
-      //     owner: campaignPDA, // Replace with real owner if not the campaign
-      //     influencer: influencerKey,
-      //     nftMint: nftMint,
-      //     nftEscrow: nftEscrowPDA,
-      //     buyerTokenAccount,
-      //     ownerTokenAccount,
-      //     escrowPdaNftTokenAccount,
-      //     marketplaceAuthority: campaignPDA, // Replace if different
-      //     tokenProgram: TOKEN_PROGRAM_ID,
-      //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      //     systemProgram: SystemProgram.programId,
-      //   })
-      //   .instruction();
+     
 
 
     const [campaignPda] = await PublicKey.findProgramAddressSync(
@@ -162,14 +128,11 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
       [Buffer.from("marketplace_authority")],
       program.programId
     );
-
-    const ix =  await program.methods
-    .processAffiliateMint(campaign as String, influencerKey,nftMint)
-    .accounts({
+     const accountsForInstruction = {
       campaign: campaignPda,
       affiliateLink: affiliateLinkPda,
       buyer,
-      influencer,
+      influencer: influencerKey, // This is the corrected line
       nftMint,
       nftEscrow: nftEscrowPda,
       buyerTokenAccount,
@@ -178,7 +141,12 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
       tokenProgram: TOKEN_PROGRAM_ID,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       systemProgram: SystemProgram.programId,
-    })
+    };
+    console.log("Accounts for instruction:", accountsForInstruction);
+    
+    const ix =  await program.methods
+    .processAffiliateMint(campaign as String, influencerKey,nftMint)
+    .accounts(accountsForInstruction)
     .instruction();
   
       // Build transaction to return to client
@@ -198,7 +166,7 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
 
     
 
-    const payload = {
+  const payload = {
   transaction: serializedTransaction,
   message: `Affiliate mint transaction for campaign: ${campaign}`,
 };

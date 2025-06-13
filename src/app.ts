@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import routes from "./routes/index.js";
+//import routes from "./routes/index.js";
 import { actionCorsMiddleware } from "@solana/actions";
 import blinkRouter from "./routes/blinks.js";
 dotenv.config();
@@ -20,18 +20,19 @@ function getActionsJson(req, res) {
   res.json(payload);
 }
 
-app.get("/actions.json", getActionsJson);
+
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.get("/actions.json", getActionsJson);
 /**
  * The `actionCorsMiddleware` middleware will provide the correct CORS settings for Action APIs
  * so you do not need to use an additional `cors` middleware if you do not require it for other reasons
  */
 // Pass an empty object or your specific HeaderHelperArgs configuration if needed
-app.use(actionCorsMiddleware({}));
+//app.use(actionCorsMiddleware({}));
 // Routes
-app.use("/api", routes);
+// app.use("/api", routes);
 app.use("/api/", blinkRouter);
 // Start server
 app.listen(PORT, () => {
