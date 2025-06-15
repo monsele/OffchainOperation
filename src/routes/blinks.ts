@@ -6,20 +6,31 @@ import { Request, Response, Router } from "express";
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
  import { AffiliateDapp } from "../utils/idl.js";
 import dotenv from "dotenv";
-import { ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddress, getAssociatedTokenAddressSync, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { Metaplex } from "@metaplex-foundation/js";
 dotenv.config();
 
 const blinkRouter = Router();
 
 blinkRouter.get("/actions/affiliate-mint", async (req: any, res: any) => {
-    const { title, campaign, influencer, nft } = req.query;
-    const baseHref = `${req.protocol}://${req.get('host')}/api/actions/affiliate-mint?campaign=${campaign}&influencer=${influencer}&nft=${nft}&title=${title}`;
+
+    const { owner, campaign, influencer, nft } = req.query;
+    const nftMint = new PublicKey(nft);
+     const connection = new Connection("https://devnet.helius-rpc.com/?api-key=8eb94de2-b378-4923-a86f-10d7590b4fdd");
+    const metaplex = new Metaplex(connection);
+     const nftJson = await metaplex.nfts().findByMint({ mintAddress: nftMint });
+      const uri = nftJson.uri.startsWith('ipfs://')
+    ? nftJson.uri.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    : nftJson.uri;
+     let metaData = await fetch(uri || '');
+     let metaDataJson = await metaData.json() as { image?: string; [key: string]: any };
+    const baseHref = `${req.protocol}://${req.get('host')}/api/actions/affiliate-mint?campaign=${campaign}&influencer=${influencer}&nft=${nft}&owner=${owner}`;
     try {
         const payload: ActionGetResponse = {
-            icon: "https://tan-glamorous-whippet-563.mypinata.cloud/ipfs/bafybeicezmcam75wapdmwovw5ubdqdjds4qs5mkqrfhz4w3xlffjpmfwui",
+            icon: metaDataJson.image ||"https://tan-glamorous-whippet-563.mypinata.cloud/ipfs/bafybeicezmcam75wapdmwovwubdqdjds4qs5mkqrfhz4w3xlffjpmfwui",
             label: "Affiliate Mint",
             description: "Mint an NFT as part of an affiliate campaign",
-            title: title ,
+            title: "Minting an NFT",
             links: {
                 actions: [
                     {
@@ -57,12 +68,12 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
     console.log("Request URL:", req.url);
     console.log("Request Query:", req.query);
     console.log("Request Body:", req.body);
-      const { campaign, influencer, nft } = req.query;
+      const { campaign, influencer, nft, owner } = req.query;
       // const body: ActionPostRequest = await req.();
        
       
       const { account } = req.body;
-          if (!campaign || !influencer || !nft) {
+          if (!campaign || !influencer || !nft || !owner) {
         return res.status(400).json({
           error: "Missing required parameters"
         });
@@ -78,7 +89,7 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
       const buyer = new PublicKey(account);
        const influencerKey = new PublicKey(influencer);
        const nftMint = new PublicKey(nft);
-    
+       const ownerKey = new PublicKey(owner)  // Use buyer as default if owner is not provided
       const dummyWallet = {
         publicKey: new PublicKey(account),
         signTransaction: async (tx) => tx,
@@ -132,6 +143,7 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
       campaign: campaignPda,
       affiliateLink: affiliateLinkPda,
       buyer,
+      owner: ownerKey,
       influencer: influencerKey, // This is the corrected line
       nftMint,
       nftEscrow: nftEscrowPda,
@@ -187,6 +199,45 @@ blinkRouter.post('/actions/affiliate-mint', async (req: Request, res: any) => {
     return res.status(500).json(errorResponse);
   }
 
+});
+
+blinkRouter.get("/nft-image", async (req: any, res: any) => {
+    try {
+        const { nftMint } = req.query;
+        
+        if (!nftMint) {
+            return res.status(400).json({ error: "nftMint parameter is required" });
+        }
+
+        const connection = new Connection("https://devnet.helius-rpc.com/?api-key=8eb94de2-b378-4923-a86f-10d7590b4fdd");
+        const metaplex = new Metaplex(connection);
+        
+        const nftPubkey = new PublicKey(nftMint as string);
+        const nft = await metaplex.nfts().findByMint({ mintAddress: nftPubkey });
+
+        if (!nft) {
+            return res.status(404).json({ error: "NFT not found" });
+        }
+
+        if (!nft.json?.image) {
+            return res.status(404).json({ error: "NFT image not found" });
+        }
+
+        return res.json({
+            success: true,
+            image: nft.json.image,
+            name: nft.json.name,
+            description: nft.json.description,
+            attributes: nft.json.attributes
+        });
+
+    } catch (error: any) {
+        console.error("Error fetching NFT:", error);
+        return res.status(500).json({ 
+            error: "Failed to fetch NFT",
+            details: error.message 
+        });
+    }
 });
 
 export default blinkRouter;

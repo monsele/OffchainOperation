@@ -1,325 +1,777 @@
-
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/affiliate_dapp.json`.
+ */
 export type AffiliateDapp = {
-  version: "0.1.0";
-  name: "affiliate_dapp";
-  address: string;
-  metadata: any;
-  instructions: [
+  "address": "Fqem6roKkvhpFtHuHDTXDzcGD9zpEgH7zVCi3Sf4hUFb",
+  "metadata": {
+    "name": "affiliateDapp",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
     {
-      name: "createAffiliateLink";
-      accounts: [
+      "name": "createAffiliateLink",
+      "discriminator": [
+        11,
+        17,
+        191,
+        204,
+        169,
+        52,
+        178,
+        86
+      ],
+      "accounts": [
         {
-          name: "affiliateLink";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "campaign";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "influencer";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: "campaignName";
-          type: "string";
-        }
-      ];
-    },
-    {
-      name: "createNftCampaign";
-      accounts: [
-        {
-          name: "company";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "campaign";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "nftMint";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "projectTokenAccount";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "nftEscrow";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "escrowPdaNftTokenAccount";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "tokenProgram";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "associatedTokenProgram";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: "name";
-          type: "string";
-        },
-        {
-          name: "mintPrice";
-          type: "u64";
-        },
-        {
-          name: "commissionPercentage";
-          type: "u8";
-        },
-        {
-          name: "campaignDetails";
-          type: "string";
-        }
-      ];
-    },
-    {
-      name: "processAffiliateMint";
-      accounts: [
-        {
-          name: "campaign";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "affiliateLink";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "buyer";
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: "owner";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "influencer";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "nftMint";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "nftEscrow";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "buyerTokenAccount";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "ownerTokenAccount";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "escrowPdaNftTokenAccount";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "marketplaceAuthority";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "tokenProgram";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "associatedTokenProgram";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: "campaignName";
-          type: "string";
-        },
-        {
-          name: "influencer";
-          type: "publicKey";
-        }
-      ];
-    }
-  ];
-  accounts: [
-    {
-      name: "affiliateLink";
-      type: {
-        kind: "struct";
-        fields: [
-          {
-            name: "campaign";
-            type: "publicKey";
-          },
-          {
-            name: "influencer";
-            type: "publicKey";
-          },
-          {
-            name: "mintsCount";
-            type: "u64";
-          },
-          {
-            name: "earnings";
-            type: "u64";
-          },
-          {
-            name: "createdAt";
-            type: "i64";
+          "name": "affiliateLink",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  102,
+                  102,
+                  105,
+                  108,
+                  105,
+                  97,
+                  116,
+                  101,
+                  95,
+                  108,
+                  105,
+                  110,
+                  107
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "influencer"
+              },
+              {
+                "kind": "arg",
+                "path": "campaignName"
+              }
+            ]
           }
-        ];
-      };
-    },
-    {
-      name: "nftCampaign";
-      type: {
-        kind: "struct";
-        fields: [
-          {
-            name: "nftMint";
-            type: "publicKey";
-          },
-          {
-            name: "company";
-            type: "publicKey";
-          },
-          {
-            name: "name";
-            type: "string";
-          },
-          {
-            name: "mintPrice";
-            type: "u64";
-          },
-          {
-            name: "commissionPercentage";
-            type: "u8";
-          },
-          {
-            name: "campaignDetails";
-            type: "string";
-          },
-          {
-            name: "active";
-            type: "bool";
-          },
-          {
-            name: "affiliatesCount";
-            type: "u64";
-          },
-          {
-            name: "totalMints";
-            type: "u64";
-          },
-          {
-            name: "createdAt";
-            type: "i64";
+        },
+        {
+          "name": "campaign",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  99,
+                  97,
+                  109,
+                  112,
+                  97,
+                  105,
+                  103,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "campaignName"
+              },
+              {
+                "kind": "arg",
+                "path": "nftMint"
+              }
+            ]
           }
-        ];
-      };
-    }
-  ];
-  events: [
-    {
-      name: "ListingCreatedEvent";
-      fields: [
-        {
-          name: "listing";
-          type: "publicKey";
-          index: false;
         },
         {
-          name: "seller";
-          type: "publicKey";
-          index: false;
+          "name": "influencer",
+          "writable": true,
+          "signer": true
         },
         {
-          name: "nftMint";
-          type: "publicKey";
-          index: false;
-        },
-        {
-          name: "price";
-          type: "u64";
-          index: false;
-        },
-        {
-          name: "createdAt";
-          type: "i64";
-          index: false;
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
         }
-      ];
-    }
-  ];
-  errors: [
-    {
-      code: 6000;
-      name: "InvalidInfluencer";
-      msg: "Wrong Influencer";
+      ],
+      "args": [
+        {
+          "name": "campaignName",
+          "type": "string"
+        },
+        {
+          "name": "nftMint",
+          "type": "pubkey"
+        }
+      ]
     },
     {
-      code: 6001;
-      name: "InvalidAccountOwner";
-      msg: "Wrong Owner Account";
+      "name": "createNftCampaign",
+      "discriminator": [
+        196,
+        236,
+        111,
+        108,
+        188,
+        255,
+        167,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "company",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "nftMint",
+          "writable": true
+        },
+        {
+          "name": "campaign",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  99,
+                  97,
+                  109,
+                  112,
+                  97,
+                  105,
+                  103,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "name"
+              },
+              {
+                "kind": "account",
+                "path": "nftMint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "projectTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "company"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "nftMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "nftEscrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "name"
+              },
+              {
+                "kind": "account",
+                "path": "nftMint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrowPdaNftTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "nftEscrow"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "nftMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "mintPrice",
+          "type": "u64"
+        },
+        {
+          "name": "commissionPercentage",
+          "type": "u8"
+        },
+        {
+          "name": "campaignDetails",
+          "type": "string"
+        }
+      ]
     },
     {
-      code: 6002;
-      name: "InvalidPrice";
-      msg: "Price should not be negative";
+      "name": "processAffiliateMint",
+      "discriminator": [
+        13,
+        94,
+        166,
+        85,
+        125,
+        176,
+        180,
+        161
+      ],
+      "accounts": [
+        {
+          "name": "campaign",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  99,
+                  97,
+                  109,
+                  112,
+                  97,
+                  105,
+                  103,
+                  110
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "campaignName"
+              },
+              {
+                "kind": "arg",
+                "path": "nftMintAddress"
+              }
+            ]
+          }
+        },
+        {
+          "name": "affiliateLink",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  102,
+                  102,
+                  105,
+                  108,
+                  105,
+                  97,
+                  116,
+                  101,
+                  95,
+                  108,
+                  105,
+                  110,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "influencer"
+              },
+              {
+                "kind": "arg",
+                "path": "campaignName"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "influencer",
+          "writable": true
+        },
+        {
+          "name": "nftMint"
+        },
+        {
+          "name": "nftEscrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  110,
+                  102,
+                  116,
+                  95,
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "campaign.name",
+                "account": "nftCampaign"
+              },
+              {
+                "kind": "account",
+                "path": "campaign.nft_mint",
+                "account": "nftCampaign"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyerTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "buyer"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "nftMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "escrowPdaNftTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "nftEscrow"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "nftMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "marketplaceAuthority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116,
+                  112,
+                  108,
+                  97,
+                  99,
+                  101,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "campaignName",
+          "type": "string"
+        },
+        {
+          "name": "influencer",
+          "type": "pubkey"
+        },
+        {
+          "name": "nftMintAddress",
+          "type": "pubkey"
+        }
+      ]
     }
-  ];
+  ],
+  "accounts": [
+    {
+      "name": "affiliateLink",
+      "discriminator": [
+        78,
+        8,
+        126,
+        239,
+        179,
+        52,
+        55,
+        238
+      ]
+    },
+    {
+      "name": "nftCampaign",
+      "discriminator": [
+        53,
+        144,
+        142,
+        82,
+        201,
+        1,
+        16,
+        250
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "invalidInfluencer",
+      "msg": "Wrong Influencer"
+    },
+    {
+      "code": 6001,
+      "name": "invalidAccountOwner",
+      "msg": "Wrong Owner Account"
+    },
+    {
+      "code": 6002,
+      "name": "invalidPrice",
+      "msg": "Price should not be negative"
+    }
+  ],
+  "types": [
+    {
+      "name": "affiliateLink",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "campaign",
+            "type": "pubkey"
+          },
+          {
+            "name": "influencer",
+            "type": "pubkey"
+          },
+          {
+            "name": "mintsCount",
+            "type": "u64"
+          },
+          {
+            "name": "earnings",
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "nftCampaign",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nftMint",
+            "type": "pubkey"
+          },
+          {
+            "name": "company",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "mintPrice",
+            "type": "u64"
+          },
+          {
+            "name": "commissionPercentage",
+            "type": "u8"
+          },
+          {
+            "name": "campaignDetails",
+            "type": "string"
+          },
+          {
+            "name": "active",
+            "type": "bool"
+          },
+          {
+            "name": "affiliatesCount",
+            "type": "u64"
+          },
+          {
+            "name": "totalMints",
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
 };
-
-// TypeDef is not available from @coral-xyz/anchor, so these exports are commented out or need to be replaced with appropriate types.
-// export type AffiliateLink = TypeDef<AffiliateDapp["accounts"][0], IdlTypes<AffiliateDapp>>;
-// export type NFTCampaign = TypeDef<AffiliateDapp["accounts"][1], IdlTypes<AffiliateDapp>>;
-// export type ListingCreatedEvent = TypeDef<AffiliateDapp["events"][0], IdlTypes<AffiliateDapp>>;
