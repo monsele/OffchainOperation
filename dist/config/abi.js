@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.contractAddress = exports.contractABI = void 0;
-exports.contractABI = [
+export const contractABI = [
     {
         "inputs": [
             {
@@ -1270,4 +1267,4 @@ exports.contractABI = [
         "type": "function"
     }
 ];
-exports.contractAddress = "0x8f11FdC6BF1AdeC0731209cde66931ADf4534656"; // Your contract address here
+export const contractAddress = "0x8f11FdC6BF1AdeC0731209cde66931ADf4534656"; // Your contract address here

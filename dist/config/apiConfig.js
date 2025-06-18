@@ -1,11 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.offchainApi = void 0;
-const axios_1 = __importDefault(require("axios"));
-exports.offchainApi = axios_1.default.create({
+import axios from "axios";
+export const offchainApi = axios.create({
     baseURL: "https://on-real.fly.dev/",
     headers: {
         "Content-Type": "application/json",
