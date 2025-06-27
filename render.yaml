@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: affiliate-pay
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+    # Uncomment and add more env vars as needed
+    # - key: ANOTHER_ENV_VAR
+    #   value: your_value
+    # If your app listens on a different port, set it here:
+    # - key: PORT
+    #   value: 3000
