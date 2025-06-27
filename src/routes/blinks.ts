@@ -16,7 +16,7 @@ blinkRouter.get("/actions/affiliate-mint", async (req: any, res: any) => {
 
     const { owner, campaign, influencer, nft } = req.query;
     const nftMint = new PublicKey(nft);
-     const connection = new Connection("https://devnet.helius-rpc.com/?api-key=8eb94de2-b378-4923-a86f-10d7590b4fdd");
+     const connection = new Connection(process.env.SOLANA_RPC_URL || "https://devnet.helius-rpc.com/?api-key=8eb94de2-b378-4923-a86f-10d7590b4fdd");
     const metaplex = new Metaplex(connection);
      const nftJson = await metaplex.nfts().findByMint({ mintAddress: nftMint });
       const uri = nftJson.uri.startsWith('ipfs://')
